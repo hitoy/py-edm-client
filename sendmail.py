@@ -152,7 +152,6 @@ for i in emaillist:
     email = i.strip()
     smtpserver=server.pop()
     server.add(smtpserver)
-    print smtpserver
     try:
         result = smtpserver.send(email,content)
         sys.stdout.write(("[%s] - %s - %s\n")%(time.ctime(),email,"Send Success!"))

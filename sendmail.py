@@ -129,11 +129,12 @@ if "-d" in arguments:
 
 try:
     #Connect and login to smtp server
-    m1 = SMTPServer("198.11.183.135")
+    m1 = SMTPServer("1.1.1.1")
 
-    m2 = SMTPServer("email-smtp.us-west-2.amazonaws.com")
-    m2.login("AKIAI3K2RLVBGME2MUKA","AkTRHpajh4kw2kY6jzgqDtNW2TWE/g14V3Xy4T9fEH5f",True)
-
+    m2 = SMTPServer("2.2.2.2")
+    m2.auth("uername","password",True)
+    m1.connect()
+    m2.connect()
 except SMTPServerError,e:
     sys.stdout.write("%s\n"%e)
     sys.stdout.flush()

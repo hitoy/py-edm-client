@@ -8,7 +8,7 @@ import time
 import sys
 
 hostname=socket.gethostname()
-XMailer="EDM-Client-By-Hito(http://www.hitoy.org/) 2.0"
+XMailer="EDM-Client-By-Hito 2.0"
 Retry = 3
 
 class SMTPServerError(BaseException):
@@ -26,16 +26,21 @@ class SMTPServer():
         self.host=host
         self.port=25
         self.timeout=timeout
-        try:
-            self.server=smtplib.SMTP(host,port,timeout=timeout)
-        except Exception,e:
-            raise SMTPServerError(e)
+        self.server=smtplib.SMTP()
         if debug:self.server.set_debuglevel(1)
+        self.ssl=False
 
-    def login(self,username,password,ssl=False):
+    def auth(self,username,password,ssl=False):
+        self.username=username
+        self.password=password
+        self.ssl=ssl
+
+    def connect(self):
         try:
-            if ssl: self.server.starttls()
-            self.server.login(username,password)
+            self.server.connect(self.host,self.port)
+            if self.ssl:
+                self.server.starttls()
+                self.server.login(self.username,self.password)
         except Exception,e:
             raise SMTPServerError(e)
 
@@ -83,10 +88,10 @@ class SMTPServer():
                     break
                 else:
                     try:
-                        self.server.connect()
+                        self.connect()
                         Retry = Retry - 1
                     except:
-                        pass
+                        Retry = Retry - 1
             except Exception,e:
                 if Retry == 0:
                     raise SMTPServerError(e)
@@ -99,22 +104,5 @@ class SMTPServer():
         def __del__(self):
             self.server.quite()
 
-"""
-m1=SMTPServer("email-smtp.us-west-2.amazonaws.com",25,debug=True)
-m1.login("fjdsofdjsfoflaf","fjdosfjdsofafdsgdsfsdaf",True)
-m1.add_sender('sales@wayata.com')
-m1.add_header(subject="TEST　MAIL",mailfrom="sales@wayata.com")
-
-try:
-    m1.send("vip@hitoy.org","haha")
-except SMTPServerError,e:
-    print e
-#m2=SMTPServer("198.11.183.135")
-m2.add_sender('sales@wayata.com')
-m2.add_header(subject="TEST　MAIL",mailfrom="sales@wayata.com")
-
-try:
-    m2.send("cleverlyboy@sina.com","hahahahahahaah")
-except SMTPServerError,e:
-    print e
-"""
+if __name__ == "__main__":
+    sys.exit(-1)

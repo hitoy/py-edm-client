@@ -83,7 +83,7 @@ class SMTPServer():
                 break
             except smtplib.SMTPServerDisconnected:
                 if Retry == 0:
-                    raise SMTPServerError("Lost the Connection withe the Server")
+                    raise SMTPServerError("Lost the Connection with the Server")
                     return False
                     break
                 else:

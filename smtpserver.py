@@ -9,7 +9,6 @@ import sys
 
 hostname=socket.gethostname()
 XMailer="EDM-Client-By-Hito 2.0"
-Retry = 3
 
 class SMTPServerError(BaseException):
 
@@ -75,7 +74,7 @@ class SMTPServer():
         header="Subject:%s\r\nFrom:%s\r\nTo:%s\r\nContent-Type:%s\r\nDate:%s\r\nX-Mailer:%s"%(self.Subject,self.MailFrom,recipient,self.ContentType,senddate,XMailer)
         content="%s\r\n\r\n%s"%(header,body)
        
-        global Retry
+        Retry = 3
         while True:
             try:
                 self.server.sendmail(self.sender,recipient,content)

@@ -117,8 +117,8 @@ if "-d" in arguments:
         sys.exit(-1)
 
     if pid:
-        logfile=open("./sendmail.log","a+")
         sys.exit(0)
+    logfile=open("./sendmail.log","a+")
     fd=open("/dev/null","a+")
     os.dup2(fd.fileno(),0)
     os.dup2(fd.fileno(),2)
@@ -161,6 +161,7 @@ for i in emaillist:
     except:
         pass
 
+    sys.stdout.flush()
     interval=int(interval)
     time.sleep(interval)
 

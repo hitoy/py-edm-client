@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # Author: Hito http://www.hitoy.org
-
 import socket
 import smtplib
 import time
 import sys
 
 hostname=socket.gethostname()
-XMailer="EDM-Client-By-Hito 2.0"
+XMailer="PYSMTP-Client-By-Hito 2.1"
 
 class SMTPServerError(BaseException):
 
@@ -47,9 +46,9 @@ class SMTPServer():
         self.sender=sender
 
     def add_header(self,**args):
-        self.Subject = "" if not args.has_key('subject') else args['subject']
-        self.MailFrom = self.sender if not args.has_key('mailfrom') else args['mailfrom']
-        self.ContentType = "text/html;charset=utf-8" if not args.has_key('contenttype') else args['contenttype']
+        self.subject = "" if not args.has_key('subject') else args['subject']
+        self.mailfrom = self.sender if not args.has_key('mailfrom') else args['mailfrom']
+        self.contenttype = "text/html;charset=utf-8" if not args.has_key('contenttype') else args['contenttype']
 
     def send(self, *args):
         """
@@ -69,11 +68,14 @@ class SMTPServer():
 
         recipient=args[0]
         body=args[1]
-        senddate="%s %s"%(time.ctime(),"+0800")
 
-        header="Subject:%s\r\nFrom:%s\r\nTo:%s\r\nContent-Type:%s\r\nDate:%s\r\nX-Mailer:%s"%(self.Subject,self.MailFrom,recipient,self.ContentType,senddate,XMailer)
+        senddate="%s %s"%(time.strftime("%a, %d %b %Y %H:%M:%S",time.localtime()),"+0800")
+        messageid="<%s>"%recipient
+        mimeversion = "1.0"
+
+        header="From:%s\r\nTo:%s\r\nSubject:%s\r\nMIME-Version:%s\r\nContent-Type:%s\r\nMessage-Id:%s\r\nDate:%s\r\nX-Mailer:%s"%(self.mailfrom,recipient,self.subject,mimeversion,self.contenttype,messageid,senddate,XMailer)
         content="%s\r\n\r\n%s"%(header,body)
-       
+
         Retry = 3
         while True:
             try:

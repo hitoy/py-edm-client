@@ -7,6 +7,7 @@ import time
 import random
 import re
 from smtpserver import *
+from econtent import EcontentParse
 
 arguments = sys.argv
 
@@ -26,7 +27,7 @@ if "-h" in arguments:
     -d run this program as a deamon(Linux)
 
     -subject add the subject of a email
-    -mailfrom add the sender email address(default is sales@wayata.com).
+    -mailfrom add the sender email address.
 """
     sys.exit(0)
 
@@ -103,9 +104,11 @@ if "-mailfrom" in arguments:
     try:
         mailfrom = arguments[index]
     except:
-        mailfrom = "sales@wayata.com"
+        sys.stdout.write("Error: Must Input Sender email address")
+        sys.exit(-1)
 else:
-    mailfrom = "sales@wayata.com"
+    sys.stdout.write("Error: Must Input Sender email address")
+    sys.exit(-1)
 
 
 
@@ -127,10 +130,12 @@ if "-d" in arguments:
     os.chdir("/")
     os.umask(0)
 
+
+
+
 try:
     #Connect and login to smtp server
     m1 = SMTPServer("1.1.1.1")
-
     m2 = SMTPServer("2.2.2.2")
     m2.auth("uername","password",True)
     m1.connect()
@@ -140,10 +145,15 @@ except SMTPServerError,e:
     sys.stdout.flush()
     sys.exit(-1)
 
-m1.add_sender("sales@edm.wataya.com")
-m2.add_sender("sales@wayata.com")
-m1.add_header(subject=subject,mailfrom=mailfrom)
-m2.add_header(subject=subject,mailfrom=mailfrom)
+
+
+econtent=EcontentParse(content)
+contenttype=econtent.get_ContentHeader()
+content=econtent.get_content()
+m1.add_sender("service@test.com")
+m2.add_sender("sales@test.com")
+m1.add_header(subject=subject,mailfrom=mailfrom,contenttype=contenttype)
+m2.add_header(subject=subject,mailfrom=mailfrom,contenttype=contentype)
 
 server = set()
 server.add(m1)
@@ -164,7 +174,3 @@ for i in emaillist:
     sys.stdout.flush()
     interval=int(interval)
     time.sleep(interval)
-
-#Close File in The End
-for i in range(255):
-    os.close(i)

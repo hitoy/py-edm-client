@@ -150,8 +150,8 @@ except SMTPServerError,e:
 econtent=EcontentParse(content)
 contenttype=econtent.get_ContentHeader()
 content=econtent.get_content()
-m1.add_sender("service@test.com")
-m2.add_sender("sales@test.com")
+m1.add_sender(mailfrom)
+m2.add_sender(mailfrom)
 m1.add_header(subject=subject,mailfrom=mailfrom,contenttype=contenttype)
 m2.add_header(subject=subject,mailfrom=mailfrom,contenttype=contentype)
 

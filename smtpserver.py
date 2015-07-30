@@ -73,9 +73,8 @@ class SMTPServer():
         messageid="<%s>"%recipient
         mimeversion = "1.0"
 
-        header="From:%s\r\nTo:%s\r\nSubject:%s\r\nMIME-Version:%s\r\nContent-Type:%s\r\nMessage-Id:%s\r\nDate:%s\r\nX-Mailer:%s"%(self.mailfrom,recipient,self.subject,mimeversion,self.contenttype,messageid,senddate,XMailer)
+        header="From:%s\r\nTo:%s\r\nSubject:%s\r\nMIME-Version:%s\r\nContent-Type:%s\r\nMessage-Id:%s\r\nDate:%s\r\nReturn-Path:%s\r\nX-Mailer:%s"%(self.mailfrom,recipient,self.subject,mimeversion,self.contenttype,messageid,senddate,self.mailfrom,XMailer)
         content="%s\r\n\r\n%s"%(header,body)
-
         Retry = 3
         while True:
             try:

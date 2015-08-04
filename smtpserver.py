@@ -5,6 +5,8 @@ import socket
 import smtplib
 import time
 import sys
+import re
+import dkim
 
 hostname=socket.gethostname()
 XMailer="PYSMTP-Client-By-Hito 2.1"
@@ -49,6 +51,7 @@ class SMTPServer():
         self.subject = "" if not args.has_key('subject') else args['subject']
         self.mailfrom = self.sender if not args.has_key('mailfrom') else args['mailfrom']
         self.contenttype = "text/html;charset=utf-8" if not args.has_key('contenttype') else args['contenttype']
+        self.dkim = None if not args.has_key('dkim') else args['dkim']
 
     def send(self, *args):
         """
@@ -73,8 +76,15 @@ class SMTPServer():
         messageid="<%s>"%recipient
         mimeversion = "1.0"
 
-        header="From:%s\r\nTo:%s\r\nSubject:%s\r\nMIME-Version:%s\r\nContent-Type:%s\r\nMessage-Id:%s\r\nDate:%s\r\nReturn-Path:%s\r\nX-Mailer:%s"%(self.mailfrom,recipient,self.subject,mimeversion,self.contenttype,messageid,senddate,self.mailfrom,XMailer)
+        header="From:%s\r\nTo:%s\r\nSubject:%s\r\nMIME-Version:%s\r\nMessage-Id:%s\r\nDate:%s\r\nX-Mailer:%s\r\nContent-Type:%s"%(self.mailfrom,recipient,self.subject,mimeversion,messageid,senddate,XMailer,self.contenttype)
         content="%s\r\n\r\n%s"%(header,body)
+        content ==  dkim.rfc822_parse(content)
+
+        if self.dkim:
+            domain = re.search(r"[^@]+$",self.mailfrom.strip()).group(0)
+            sig = dkim.sign(content,'_dkim',domain,open(self.dkim).read(),include_headers=["From","To","Subject","Date","Message-Id","X-Mailer"],canonicalize=(dkim.Simple, dkim.Relaxed))
+            content = sig + content
+
         Retry = 3
         while True:
             try:

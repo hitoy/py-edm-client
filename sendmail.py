@@ -25,7 +25,8 @@ if "-h" in arguments:
     -i set the transmission interval of two messages default 20
     -m set the send mode (rand, turn, select),defalut is rand
     -d run this program as a deamon(Linux)
-
+    
+    -dkim add a dkim sign of this email
     -subject add the subject of a email
     -mailfrom add the sender email address.
 """
@@ -110,7 +111,12 @@ else:
     sys.stdout.write("Error: Must Input Sender email address")
     sys.exit(-1)
 
-
+if "-dkim" in arguments:
+    index=arguments.index("-dkim")+1
+    if os.path.isfile(arguments[index]):
+        cert = arguments[index]
+else:
+        cert = None
 
 if "-d" in arguments:
     try:
@@ -150,10 +156,12 @@ except SMTPServerError,e:
 econtent=EcontentParse(content)
 contenttype=econtent.get_ContentHeader()
 content=econtent.get_content()
+
 m1.add_sender(mailfrom)
 m2.add_sender(mailfrom)
-m1.add_header(subject=subject,mailfrom=mailfrom,contenttype=contenttype)
-m2.add_header(subject=subject,mailfrom=mailfrom,contenttype=contentype)
+m1.add_header(subject=subject,mailfrom=mailfrom,contenttype=contenttype,dkim=cert)
+m2.add_header(subject=subject,mailfrom=mailfrom,contenttype=contentype,dkim=cert)
+
 
 server = set()
 server.add(m1)

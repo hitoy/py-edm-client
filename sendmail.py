@@ -59,7 +59,7 @@ if "-cf" in arguments and "-c" in arguments:
 elif "-cf" in arguments:
     index = arguments.index("-cf")+1
     try:
-        content=open(arguments[index],"wb").read()
+        content=open(arguments[index],"rb").read()
     except Exception,e:
         sys.stdout.write("%s\n"%e)
         sys.exit(-1)

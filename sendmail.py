@@ -12,12 +12,12 @@ from econtent import EcontentParse
 arguments = sys.argv
 
 if len(arguments) == 1:
-    print "Need At least 2 Parameters, 0 gives.\r\n-h for help"
+    sys.stdout.write("Need At least 3 Parameters, 0 gives.\r\n-h for help\n")
     sys.exit(-1)
 
 if "-h" in arguments:
-    print "\tThis is The EDM Client Powered By Hito,Please allow the fllow rules to send a email or a emai list:"
-    print """
+    sys.stdout.write("\tThis is The EDM Client Powered By Hito,Please allow the fllow rules to send a email or a emai list:\n")
+    sys.stdout.write("""
     -ef (emailfile)assignation the file store the email you want to send mail to him/her
     -e  (email)assignation the email address you want to send mail to him/her
     -cf (contentfile)assignation the file store the content 
@@ -29,7 +29,7 @@ if "-h" in arguments:
     -dkim add a dkim sign of this email
     -subject add the subject of a email
     -mailfrom add the sender email address.
-"""
+    """)
     sys.exit(0)
 
 if "-ef" in arguments and "-e" in arguments:

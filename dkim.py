@@ -22,7 +22,7 @@ import hashlib
 import re
 import time
 
-import dns.resolver
+#import dns.resolver
 
 __all__ = [
     "Simple",

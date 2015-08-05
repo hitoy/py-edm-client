@@ -82,7 +82,7 @@ class SMTPServer():
 
         if self.dkim:
             domain = re.search(r"[^@]+$",self.mailfrom.strip()).group(0)
-            sig = dkim.sign(content,'_dkim',domain,open(self.dkim).read(),include_headers=["From","To","Subject","Date","Message-Id","X-Mailer"],canonicalize=(dkim.Simple, dkim.Relaxed))
+            sig = dkim.sign(content,'_dkim',domain,open(self.dkim,"rb").read(),include_headers=["From","To","Subject","Date","Message-Id","X-Mailer"],canonicalize=(dkim.Simple, dkim.Relaxed))
             content = sig + content
 
         Retry = 3

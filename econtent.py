@@ -28,7 +28,7 @@ class EcontentParse():
         if self.type=='plain':
             return base64.b64encode(self.content)
         elif self.type=='alternative':
-            content = ""#"This is a multi-part message in MIME format.\r\n\r\n"
+            content = "This is a multi-part message in MIME format.\r\n\r\n"
             notagcontent=re.sub(r"<[^>]+>","",self.content)
             content += "--%s\r\nContent-Type:text/plain;charset=\"us-ascii\"\r\nContent-Transfer-Encoding: base64\r\n\r\n%s\r\n"%(self.boundary,base64.b64encode(notagcontent))
             content += "--%s\r\nContent-Type:text/html;charset=\"us-ascii\"\r\nContent-Transfer-Encoding: base64\r\n\r\n%s\r\n--%s--\r\n"%(self.boundary,base64.b64encode(self.content),self.boundary)

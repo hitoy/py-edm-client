@@ -26,9 +26,10 @@ if "-h" in arguments:
     -m set the send mode (rand, turn, select),defalut is rand
     -d run this program as a deamon(Linux)
     
-    -dkim add a dkim sign of this email
-    -subject add the subject of a email
+    -dkim add a dkim sign of this email.
+    -subject add the subject of a email.
     -mailfrom add the sender email address.
+    -attachment add a attachment (Max 10MB).
     """)
     sys.exit(0)
 
@@ -118,6 +119,18 @@ if "-dkim" in arguments:
 else:
         cert = None
 
+
+if "-attachment" in arguments:
+    index=arguments.index("-attachment")+1
+    if not (os.path.isfile(arguments[index])):
+        sys.stdout.write("Error: attachment not found!\n")
+    elif os.path.getsize(arguments[index]) > 10*1024*1024:
+        sys.stdout.write("Error: attachment too large!\rn")
+    else:
+        attach = arguments[index]
+else:
+    attach = None
+
 if "-d" in arguments:
     try:
         pid=os.fork()
@@ -153,15 +166,16 @@ except SMTPServerError,e:
 
 
 
-econtent=EcontentParse(content)
+econtent=EcontentParse(content,attach)
 contenttype=econtent.get_ContentHeader()
 content=econtent.get_content()
+
+
 
 m1.add_sender(mailfrom)
 m2.add_sender(mailfrom)
 m1.add_header(subject=subject,mailfrom=mailfrom,contenttype=contenttype,dkim=cert)
 m2.add_header(subject=subject,mailfrom=mailfrom,contenttype=contentype,dkim=cert)
-
 
 server = set()
 server.add(m1)

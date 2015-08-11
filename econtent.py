@@ -43,7 +43,7 @@ class EcontentParse():
             boundary = '--=_Next_Part%s__=--'%(time.time())
             attachcontent = open(self.attachment,"rb").read()
 
-            content = "--%s\r\nContent-Type: multipart/alternative;\r\nboundary=\"%s\"\r\n\r\n"%(self.boundary,boundary)
+            content = "--%s\r\nContent-Type: multipart/alternative;\r\n    boundary=\"%s\"\r\n\r\n"%(self.boundary,boundary)
             content += self.get_txt_content(boundary)
             content += "\r\n--%s\r\nContent-Type: application/octet-stream;\r\nname=\"%s\"\r\nContent-Disposition: attachment;filename=\"%s\"\r\nContent-Transfer-Encoding: base64\r\n\r\n%s\r\n\r\n--%s--\r\n"%(self.boundary,self.filename,self.filename,Long2Email(base64.b64encode(attachcontent)),self.boundary)
             return "This is a multi-part message in MIME format.\r\n\r\n%s"%(content)

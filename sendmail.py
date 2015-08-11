@@ -26,10 +26,10 @@ if "-h" in arguments:
     -m set the send mode (rand, turn, select),defalut is rand
     -d run this program as a deamon(Linux)
     
-    -dkim add a dkim sign of this email.
     -subject add the subject of a email.
     -mailfrom add the sender email address.
     -attachment add a attachment (Max 10MB).
+    -dkim add a dkim sign of this email.
     """)
     sys.exit(0)
 

@@ -35,7 +35,7 @@ class EcontentParse():
     def get_txt_content(self,boundary):
             notagcontent=re.sub(r"<[^>]+>","",self.content)
             content = "--%s\r\nContent-Type:text/plain;charset=\"us-ascii\"\r\nContent-Transfer-Encoding: base64\r\n\r\n%s\r\n\r\n"%(boundary,Long2Email(base64.b64encode(notagcontent)))
-            content += "--%s\r\nContent-Type:text/html;charset=\"us-ascii\"\r\nContent-Transfer-Encoding: base64\r\n\r\n%s\r\n--%s--\r\n\r\n"%(boundary,Long2Email(base64.b64encode(self.content)),boundary)
+            content += "--%s\r\nContent-Type:text/html;charset=\"us-ascii\"\r\nContent-Transfer-Encoding: base64\r\n\r\n%s\r\n\r\n--%s--\r\n"%(boundary,Long2Email(base64.b64encode(self.content)),boundary)
             return content
 
     def get_content(self):
@@ -45,7 +45,7 @@ class EcontentParse():
 
             content = "--%s\r\nContent-Type: multipart/alternative;\r\n    boundary=\"%s\"\r\n\r\n"%(self.boundary,boundary)
             content += self.get_txt_content(boundary)
-            content += "\r\n--%s\r\nContent-Type: application/octet-stream;\r\nname=\"%s\"\r\nContent-Disposition: attachment;filename=\"%s\"\r\nContent-Transfer-Encoding: base64\r\n\r\n%s\r\n\r\n--%s--\r\n"%(self.boundary,self.filename,self.filename,Long2Email(base64.b64encode(attachcontent)),self.boundary)
+            content += "\r\n\r\n--%s\r\nContent-Type: application/octet-stream;\r\nname=\"%s\"\r\nContent-Disposition: attachment;filename=\"%s\"\r\nContent-Transfer-Encoding: base64\r\n\r\n%s\r\n\r\n--%s--\r\n"%(self.boundary,self.filename,self.filename,Long2Email(base64.b64encode(attachcontent)),self.boundary)
             return "This is a multi-part message in MIME format.\r\n\r\n%s"%(content)
         else:
             return "This is a multi-part message in MIME format.\r\n\r\n%s"%self.get_txt_content(self.boundary)
